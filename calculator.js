@@ -10,7 +10,7 @@ var operations = [
     id: 1,
     operation: "Addition",
     logic: function (input) {
-      return input.reduce((partialSum, a) => parseInt(partialSum) + parseInt(a));
+      return input.reduce((partialSum, a) => partialSum + a);
     },
     verb: "add",
   },
@@ -18,7 +18,7 @@ var operations = [
     id: 2,
     operation: "Subtraction",
     logic: function (input) {
-      return input.reduce((partialSum, a) => parseInt(partialSum) - parseInt(a));
+      return input.reduce((partialSum, a) => partialSum - a);
     },
     verb: "subtract",
   },
@@ -26,7 +26,7 @@ var operations = [
     id: 3,
     operation: "Multiplication",
     logic: function (input) {
-      return input.reduce((partialSum, a) => parseInt(partialSum) * parseInt(a));
+      return input.reduce((partialSum, a) => partialSum * a);
     },
     verb: "multiply",
   },
@@ -34,7 +34,7 @@ var operations = [
     id: 4,
     operation: "Division",
     logic: function (input) {
-      return input.reduce((partialSum, a) => parseInt(partialSum) / parseInt(a));
+      return input.reduce((partialSum, a) => partialSum / a);
     },
     verb: "divide",
   },
@@ -54,12 +54,12 @@ function main() {
       console.log("Please enter a numeric value ");
       main();
     } else {
-      checks(value);
+      operationExistsCheck(value);
     }
   });
 }
 
-function checks(selection) {
+function operationExistsCheck(selection) {
   var opObj = operations.filter(function (o) {
     return o.id == selection;
   });
@@ -71,20 +71,22 @@ function checks(selection) {
   }
 }
 
+function cleanArray(input) {
+  let inputArray = input.split(" ");
+  if (typeof this.Answer != "undefined") {
+    inputArray.unshift(this.Answer);
+  }
+  inputArray = inputArray.filter((e) => (e === 0 ? true : e));
+  return inputArray.map(Number);
+}
+
 function performOperation(opID) {
-  var opObj = operations.filter(function (o) {
-    return o.id == opID;
-  });
   const getAnswer = new Promise((resolve) => {
+    let index = opID - 1;
     readline.question(
-      `Enter the numbers you would like to ${opObj[0].verb} seperated by a space (ex. 2 5) `,
+      `Enter the numbers you would like to ${operations[index].verb} seperated by a space (ex. 2 5) `,
       (input) => {
-        let inputArray = input.split(" ");
-        inputArray.unshift(this.Answer);
-        inputArray = inputArray.filter(function (e) {
-          return e;
-        });
-        this.Answer = opObj[0].logic(inputArray);
+        this.Answer = operations[index].logic(cleanArray(input));
         console.log(`result: ${this.Answer}`);
         resolve(this.Answer);
       }
@@ -112,8 +114,6 @@ function additionalOps() {
     }
   );
 }
-
-
 
 console.log("Welcome to the basic node.js calculator.\n");
 main();
