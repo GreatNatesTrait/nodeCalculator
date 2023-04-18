@@ -1,3 +1,7 @@
+//
+//VARIABLES
+//
+
 const readline = require("readline").createInterface({
   input: process.stdin,
   output: process.stdout,
@@ -7,7 +11,6 @@ var Answer = "";
 
 var operations = [
   {
-    id: 1,
     operation: "Addition",
     logic: function (input) {
       return input.reduce((partialSum, a) => partialSum + a);
@@ -15,7 +18,6 @@ var operations = [
     verb: "add",
   },
   {
-    id: 2,
     operation: "Subtraction",
     logic: function (input) {
       return input.reduce((partialSum, a) => partialSum - a);
@@ -23,7 +25,6 @@ var operations = [
     verb: "subtract",
   },
   {
-    id: 3,
     operation: "Multiplication",
     logic: function (input) {
       return input.reduce((partialSum, a) => partialSum * a);
@@ -31,7 +32,6 @@ var operations = [
     verb: "multiply",
   },
   {
-    id: 4,
     operation: "Division",
     logic: function (input) {
       return input.reduce((partialSum, a) => partialSum / a);
@@ -40,53 +40,58 @@ var operations = [
   },
 ];
 
+//
+//FUNCTIONS
+//
+
 function main() {
-  const opSelection = new Promise((resolve) => {
+  const selectedOperationIndex = new Promise((resolve) => {
     readline.question(
-      "Enter the number for the desired operation.\n1> Addition\n2> Subtraction\n3> Multiplication\n4> Division\n",
-      (selection) => {
-        resolve(selection);
+      `Enter the number for the desired operation.\n${createOperationSelectionPrompt()}`,
+      (operationIndex) => {
+        resolve(operationIndex);
       }
     );
   });
-  opSelection.then((value) => {
-    if (isNaN(value)) {
-      console.log("Please enter a numeric value ");
-      main();
-    } else {
-      operationExistsCheck(value);
-    }
+  selectedOperationIndex.then((userEnteredOperationIndex) => {
+    isEnteredIndexANumber(userEnteredOperationIndex);
   });
 }
 
-function operationExistsCheck(selection) {
-  var opObj = operations.filter(function (o) {
-    return o.id == selection;
-  });
-  if (opObj.length == 0) {
+function createOperationSelectionPrompt() {
+  let prompt = "";
+  for (let i = 0; i <= operations.length - 1; i++) {
+    prompt = prompt.concat(`${i}> ${operations[i].operation}\n`);
+  }
+  return prompt;
+}
+
+function isEnteredIndexANumber(userEnteredOperationIndex) {
+  if (isNaN(userEnteredOperationIndex)) {
+    console.log("Please enter a numeric value ");
+    main();
+  } else {
+    doesOperationExist(userEnteredOperationIndex);
+  }
+}
+
+function doesOperationExist(userEnteredOperationIndex) {
+  if (operations[userEnteredOperationIndex] === undefined) {
     console.log("The number entered does not correspond to an operation ");
     main();
   } else {
-    performOperation(opObj[0].id);
+    let operation = operations[userEnteredOperationIndex];
+    performOperation(operation);
   }
 }
 
-function cleanArray(input) {
-  let inputArray = input.split(" ");
-  if (typeof this.Answer != "undefined") {
-    inputArray.unshift(this.Answer);
-  }
-  inputArray = inputArray.filter((e) => (e === 0 ? true : e));
-  return inputArray.map(Number);
-}
-
-function performOperation(opID) {
+function performOperation(operation) {
   const getAnswer = new Promise((resolve) => {
-    let index = opID - 1;
     readline.question(
-      `Enter the numbers you would like to ${operations[index].verb} seperated by a space (ex. 2 5) `,
-      (input) => {
-        this.Answer = operations[index].logic(cleanArray(input));
+      `Enter the numbers you would like to ${operation.verb} seperated by a space (ex. 2 5) `,
+      (userInput) => {
+        let valuesForOperation = mapUserInputToCalculableValues(userInput);
+        this.Answer = operation.logic(valuesForOperation);
         console.log(`result: ${this.Answer}`);
         resolve(this.Answer);
       }
@@ -96,6 +101,36 @@ function performOperation(opID) {
     this.Answer = value;
     additionalOps();
   });
+}
+
+function mapUserInputToCalculableValues(userInput) {
+  let userInputArray = convertUserInputToArray(userInput);
+  let cleanStringArray = removeEmptyStringsFromArray(userInputArray);
+  let calculableValueArray = convertArrayElementsToNumbers(cleanStringArray);
+  return calculableValueArray;
+}
+
+function convertUserInputToArray(userInput) {
+  let userInputArray = userInput.split(" ");
+  if (typeof this.Answer != "undefined") {
+    userInputArray = includePreviousResultIfNecessary(userInputArray);
+  }
+  return userInputArray;
+}
+
+function includePreviousResultIfNecessary(userInputArray) {
+  let userInputArrayWithPreviousResult = userInputArray;
+  userInputArrayWithPreviousResult.unshift(this.Answer);
+  return userInputArrayWithPreviousResult;
+}
+
+function removeEmptyStringsFromArray(userInputArray) {
+  let cleanUserInputArray = userInputArray.filter((e) => (e === 0 ? true : e));
+  return cleanUserInputArray;
+}
+
+function convertArrayElementsToNumbers(cleanStringArray) {
+  return cleanStringArray.map(Number);
 }
 
 function additionalOps() {
@@ -114,6 +149,10 @@ function additionalOps() {
     }
   );
 }
+
+//
+//INVOCATION
+//
 
 console.log("Welcome to the basic node.js calculator.\n");
 main();
