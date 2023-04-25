@@ -1,22 +1,11 @@
 //
 //VARIABLES
 //
-const http = require('http')
-const fs = require('fs')
-
-const server = http.createServer((req, res) => {
-  res.writeHead(200, { 'content-type': 'text/html' })
-  fs.createReadStream('index.html').pipe(res)
-})
-
-server.listen(process.env.PORT || 3000)
-
-const readline = require("readline").createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
+const express = require("express");
+const app = express();
 
 var Answer = "";
+var valuesForOperation = [];
 
 var operations = [
   {
@@ -53,63 +42,13 @@ var operations = [
 //FUNCTIONS
 //
 
-function main() {
-  const selectedOperationIndex = new Promise((resolve) => {
-    readline.question(
-      `Enter the number for the desired operation.\n${createOperationSelectionPrompt()}`,
-      (operationIndex) => {
-        resolve(operationIndex);
-      }
-    );
-  });
-  selectedOperationIndex.then((userEnteredOperationIndex) => {
-    isEnteredIndexANumber(userEnteredOperationIndex);
-  });
-}
 
-function createOperationSelectionPrompt() {
-  let prompt = "";
-  for (let i = 0; i <= operations.length - 1; i++) {
-    prompt = prompt.concat(`${i}> ${operations[i].operation}\n`);
-  }
-  return prompt;
-}
-
-function isEnteredIndexANumber(userEnteredOperationIndex) {
-  if (isNaN(userEnteredOperationIndex)) {
-    console.log("Please enter a numeric value ");
-    main();
-  } else {
-    doesOperationExist(userEnteredOperationIndex);
-  }
-}
-
-function doesOperationExist(userEnteredOperationIndex) {
-  if (operations[userEnteredOperationIndex] === undefined) {
-    console.log("The number entered does not correspond to an operation ");
-    main();
-  } else {
-    let operation = operations[userEnteredOperationIndex];
-    performOperation(operation);
-  }
-}
-
-function performOperation(operation) {
-  const getAnswer = new Promise((resolve) => {
-    readline.question(
-      `Enter the numbers you would like to ${operation.verb} seperated by a space (ex. 2 5) `,
-      (userInput) => {
-        let valuesForOperation = mapUserInputToCalculableValues(userInput);
+function performOperation(operation, userInput) {
+        valuesForOperation = mapUserInputToCalculableValues(userInput);
         this.Answer = operation.logic(valuesForOperation);
         console.log(`result: ${this.Answer}`);
-        resolve(this.Answer);
-      }
-    );
-  });
-  getAnswer.then((value) => {
-    this.Answer = value;
-    additionalOps();
-  });
+        Answer = operation.logic(valuesForOperation);
+        console.log(`result: ${Answer}`);
 }
 
 function mapUserInputToCalculableValues(userInput) {
@@ -142,26 +81,22 @@ function convertArrayElementsToNumbers(cleanStringArray) {
   return cleanStringArray.map(Number);
 }
 
-function additionalOps() {
-  readline.question(
-    "Press 1 to continue calculations, 2 to clear result, or 3 to exit ",
-    (input) => {
-      if (input == "1") {
-        main();
-      } else if (input == "2") {
-        this.Answer = "";
-        main();
-      } else {
-        console.log("Goodbye");
-        readline.close();
-      }
-    }
-  );
-}
-
 //
 //INVOCATION
 //
 
-console.log("Welcome to the basic node.js calculator.\n");
-main();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.get("/", (req, res) => {
+  res.sendFile("C:/Users/MclawhornN/nodeCalculator/" + "index.html");
+});
+
+app.post("/", (req, res) => {
+  let operationObj = operations.find(x => x.operation === req.body.operation);
+  performOperation(operationObj, req.body.userInput)
+  console.log("hit lambda endpoint to store in dynamoDB");  
+  res.sendFile("C:/Users/MclawhornN/nodeCalculator/" + "index.html");
+});
+
+app.listen(3000);
