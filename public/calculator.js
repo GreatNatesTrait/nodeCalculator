@@ -1,8 +1,7 @@
 //
 //VARIABLES
 //
-const express = require("express");
-const app = express();
+
 
 var Answer = "";
 var valuesForOperation = [];
@@ -44,11 +43,12 @@ var operations = [
 
 
 function performOperation(operation, userInput) {
+  let operationObj = operations.find(x => x.operation === operation);
         valuesForOperation = mapUserInputToCalculableValues(userInput);
-        this.Answer = operation.logic(valuesForOperation);
+        this.Answer = operationObj.logic(valuesForOperation);
         console.log(`result: ${this.Answer}`);
-        Answer = operation.logic(valuesForOperation);
-        console.log(`result: ${Answer}`);
+        let displayResult = document.getElementById('result');
+        displayResult.value = `result: ${this.Answer}`;
 }
 
 function mapUserInputToCalculableValues(userInput) {
@@ -81,22 +81,5 @@ function convertArrayElementsToNumbers(cleanStringArray) {
   return cleanStringArray.map(Number);
 }
 
-//
-//INVOCATION
-//
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-  res.sendFile("C:/Users/MclawhornN/nodeCalculator/" + "index.html");
-});
-
-app.post("/", (req, res) => {
-  let operationObj = operations.find(x => x.operation === req.body.operation);
-  performOperation(operationObj, req.body.userInput)
-  console.log("hit lambda endpoint to store in dynamoDB");  
-  res.sendFile("C:/Users/MclawhornN/nodeCalculator/" + "index.html");
-});
-
-app.listen(3000);

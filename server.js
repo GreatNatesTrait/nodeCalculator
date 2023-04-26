@@ -9,4 +9,8 @@ app.get("/", function (req, res) {
     res.sendFile("C:/Users/MclawhornN/nodeCalculator/index.html");
 });
 
+app.post("/", function (req, res) {
+    console.log(req)
+});
+
 app.listen(3000);

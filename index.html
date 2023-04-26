@@ -12,13 +12,14 @@
     <form action="/" method="POST">
       <fieldset>
         <h3>Enter values for operation (seperated by space)</h3>
-        <input type ="text" name = 'userInput' required>
+        <input type ="text" name = 'userInput' id = 'userInput' required>
         <br><br>
-        <button type ="submit" name = 'operation' value = 'Addition'>Add</button>
-        <button type ="submit" name = 'operation' value = 'Subtraction'>Subtract</button>  
+        <button type ="submit" name = 'operation' value = 'Addition' onclick="performOperation(this.value, document.getElementById('userInput').value)">Add</button>
+        <button type ="submit" name = 'operation' value = 'Subtraction' >Subtract</button>  
         <button type ="submit" name = 'operation' value = 'Multiplication'>Multiply</button>  
         <button type ="submit" name = 'operation' value = 'Division'>Divide</button>         
       </fieldset>
     </form>
+    <input type="text" class="age" id = 'result' >
     <script src="./calculator.js" crossorigin="anonymous"> </script>
     
