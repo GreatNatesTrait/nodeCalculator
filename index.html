@@ -1,25 +1,93 @@
 <!DOCTYPE html>
-<html lang = "en">
-<head>
-  <meta charset = "UTF-8">
-  <!-- <link rel = "stylesheet" href="style.css"> -->
-  <title> Node Calculator </title>
-</head>
-<body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Node Calculator</title>
+    <link rel="stylesheet" href="./calculator.css" />
+    <style type="text/css" media="screen"></style>
+  </head>
+  <body>
     <header>
       <h1>Node Calculator</h1>
     </header>
-    <form action="/" method="POST">
-      <fieldset>
-        <h3>Enter values for operation (seperated by space)</h3>
-        <input type ="text" name = 'userInput' id = 'userInput' required>
-        <br><br>
-        <button type ="submit" name = 'operation' value = 'Addition' onclick="performOperation(this.value, document.getElementById('userInput').value)">Add</button>
-        <button type ="submit" name = 'operation' value = 'Subtraction' >Subtract</button>  
-        <button type ="submit" name = 'operation' value = 'Multiplication'>Multiply</button>  
-        <button type ="submit" name = 'operation' value = 'Division'>Divide</button>         
-      </fieldset>
-    </form>
-    <input type="text" class="age" id = 'result' >
-    <script src="./calculator.js" crossorigin="anonymous"> </script>
-    
+    <div class="container" style="border: 1px solid black">
+      <h3>Enter values for operation (seperated by space)</h3>
+      <input type="text" name="userInput" id="userInput" required />
+      <span style="font-weight: bold" id="showResult"></span>
+      <br /><br />
+      <button
+        type="submit"
+        name="operation"
+        value="Addition"
+        onclick="performOperation(this.value, document.getElementById('userInput').value)"
+      >
+        Add
+      </button>
+      <button
+        type="submit"
+        name="operation"
+        value="Subtraction"
+        onclick="performOperation(this.value, document.getElementById('userInput').value)"
+      >
+        Subtract
+      </button>
+      <button
+        type="submit"
+        name="operation"
+        value="Multiplication"
+        onclick="performOperation(this.value, document.getElementById('userInput').value)"
+      >
+        Multiply
+      </button>
+      <button
+        type="submit"
+        name="operation"
+        value="Division"
+        onclick="performOperation(this.value, document.getElementById('userInput').value)"
+      >
+        Divide
+      </button>
+      <br />
+      <br />
+      <button
+        type="submit"
+        name="operation"
+        value="Clear Result"
+        onclick="performOperation(this.value)"
+      >
+        Clear Result
+      </button>
+      <button
+        type="submit"
+        name="operation"
+        value="Clear Input"
+        onclick="clearInputField()"
+      >
+        Clear Input
+      </button>
+    </div>
+    <br />
+    <button
+      type="submit"
+      name="operation"
+      value="Log Result"
+      onclick="writeToDynamoDB()"
+    >
+      Write to DynamoDB
+    </button>
+    <button
+      type="submit"
+      name="operation"
+      value="View Previous Results"
+      onclick="getRecords()"
+    >
+      Get Records
+    </button>
+    <br />
+    <br />
+    <div>
+      <table id="previousResultsTable"></table>
+    </div>
+    <script src="./calculator.js" crossorigin="anonymous"></script>
+  </body>
+</html>

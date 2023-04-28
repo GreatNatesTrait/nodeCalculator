@@ -1,0 +1,14 @@
+.container {
+    border: 2px solid #ccc;
+    padding: 10px;
+    width: 20em;
+  }
+
+  table{
+    border-collapse:collapse;
+    border:1px solid #FF0000;
+    }
+    
+    table td{
+    border:1px solid #FF0000;
+    }
