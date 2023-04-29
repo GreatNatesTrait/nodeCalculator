@@ -7,4 +7,4 @@ file_exists_behavior: OVERWRITE
 ApplicationStart:
     - location: start.sh
       timeout: 300
-      runas: ubuntu
+      runas: root

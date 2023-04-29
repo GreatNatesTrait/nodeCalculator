@@ -1,2 +1,3 @@
 #!/bin/sh
-node server
+cd /var/www/test
+node server.js
