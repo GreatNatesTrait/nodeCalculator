@@ -41,6 +41,7 @@ var operations = [
 //
 
 function performOperation(operation, userInput) {
+  console.log(operation,userInput);
   if (operation === "Clear Result") {
     this.Answer = "";
     setDisplayValue();
@@ -51,7 +52,9 @@ function performOperation(operation, userInput) {
     let operationObj = operations.find((x) => x.operation === operation);
     valuesForOperation = mapUserInputToCalculableValues(userInput);
     this.Answer = operationObj.logic(valuesForOperation);
-    setDisplayValue();
+    //setDisplayValue();
+    //return for testing
+    return this.Answer;
   } else {
     alert("Please only enter numbers or spaces");
     return;
@@ -99,7 +102,7 @@ function containsOnlyNumbers(str) {
 
 function clearInputField() {
   const showResultElement = document.getElementById("userInput");
-  showResultElement.value = null;
+  showResultElement.value = '';
 }
 
 async function writeToDynamoDB() {
@@ -109,12 +112,8 @@ async function writeToDynamoDB() {
     method: "put",
     body: reqObj,
   })
-    .then(function (response) {
+    .then((response) => {
       console.log(response);
-      return response.json();
-    })
-    .then(function (data) {
-      console.log("Request succeeded with JSON response", data);
     })
     .catch(function (error) {
       console.log("Request failed", error);
@@ -132,7 +131,7 @@ function getRecords() {
       }
 
       // Examine the text in the response
-      response.json().then(function (dynamoRes) {
+      response.json().then((dynamoRes) => {
         let table = document.getElementById("previousResultsTable");
         table.innerHTML = "";
         dynamoRes.forEach((res) => {
@@ -163,3 +162,5 @@ function getTimeStamp() {
   const timestamp = dateObject.toISOString();
   return timestamp;
 }
+
+module.exports={performOperation, getTimeStamp, convertArrayElementsToNumbers, clearInputField}
