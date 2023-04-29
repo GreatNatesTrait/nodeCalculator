@@ -7,3 +7,28 @@ before_script:
 
 script:
   - npm test
+  - zip -r latest2 ./
+  - mkdir -p dpl_cd_upload
+  - mv latest2.zip dpl_cd_upload/latest2.zip
+
+deploy:
+- provider: s3
+  access_key_id: $my_id
+  secret_access_key: $my_secret
+  local_dir: dpl_cd_upload
+  skip_cleanup: true
+  on:   
+    branch: development
+  bucket: nates3practice
+  region: us-east-1
+- provider: codedeploy
+  access_key_id: $my_id
+  secret_access_key: $my_secret
+  bucket: nates3practice
+  key: latest2.zip
+  bundle_type: zip
+  application: nodeCalculator
+  deployment_group: dev
+  region: us-east-1
+  on:   
+    branch: development
