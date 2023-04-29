@@ -4,9 +4,9 @@ node_js:
 
 before_script:
   - npm install
+  - npm test
 
 script:
-  - npm test
   - zip -r latest2 ./
   - mkdir -p dpl_cd_upload
   - mv latest2.zip dpl_cd_upload/latest2.zip
