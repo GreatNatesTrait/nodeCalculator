@@ -1,6 +1,6 @@
 /** * @jest-environment jsdom */
 const fs = require('fs');
-window.document.body.innerHTML = fs.readFileSync('./index.html');
+window.document.body.innerHTML = fs.readFileSync('./public/index.html');
 const calculator = require('./public/calculator');
 
 test('properly performs selected operation', () => {
