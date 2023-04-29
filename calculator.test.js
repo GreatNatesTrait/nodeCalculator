@@ -1,7 +1,7 @@
 /** * @jest-environment jsdom */
 const fs = require('fs');
 window.document.body.innerHTML = fs.readFileSync('./index.html');
-const calculator = require('./calculator');
+const calculator = require('./public/calculator');
 
 test('properly performs selected operation', () => {
     expect(calculator.performOperation('Addition','2 5 4')).toBe(11)

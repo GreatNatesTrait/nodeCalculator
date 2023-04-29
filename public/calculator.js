@@ -52,7 +52,7 @@ function performOperation(operation, userInput) {
     let operationObj = operations.find((x) => x.operation === operation);
     valuesForOperation = mapUserInputToCalculableValues(userInput);
     this.Answer = operationObj.logic(valuesForOperation);
-    //setDisplayValue();
+    setDisplayValue();
     //return for testing
     return this.Answer;
   } else {
